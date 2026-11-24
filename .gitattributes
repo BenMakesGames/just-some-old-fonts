@@ -1,0 +1,3 @@
+# keep every font byte-for-byte; the SHA-256 lists depend on it
+fonts/** -text
+*.png binary

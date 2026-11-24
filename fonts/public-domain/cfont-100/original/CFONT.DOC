@@ -1,0 +1,181 @@
+
+                      ColorFont Library for Turbo C++
+      ==================================================================
+      Written by Nikolai Soumarokov           Version 1.00, July 7, 1995
+      ------------------------------------------------------------------
+
+      This library is Public Domain. You are encouraged to make copies
+      of this library, to give it to other people, to upload it to FTP
+      sites and to BBS's, to put it on CD-ROMs, etc., as long as you
+      distribute the program in its original form, that is you distribute
+      all the program files together and do not modify them in any way. 
+      The program files are:
+
+      3DFONT   FNT    sample font used by the demonstration program
+      BIGFONT  FNT    - " - (you can use them freely in your programs)
+      CFONT    LIB    the library itself
+      CFONT    DOC    this documentation
+      FONTDEMO CPP    demonstration program source 
+      FONTDEMO EXE    demonstration program
+      DEFAULT  PAL    color palette used by the demonstration program
+      CFONT    H      library header file
+
+      Under no circumstances is this program to be sold. No payment
+      to the author is required for using this software. However, if
+      you write a program using this library, I would appreciate if
+      you give me some credit in the program itself or in its
+      documentation. Sending me a copy of the program would be nice, too.
+
+      The ColorFont library is provided AS IS. The author specifically 
+      disclaims any responsibility for any loss of profit or any 
+      incidental, consequential or other damages. I did not program
+      this library to do anything harmful, but if something happens, I
+      am not responsible for that. Also, while the program works 
+      fine on my PC with Turbo C++ 3.0, I do not guarantee it will work 
+      on other machines or with other compilers.
+
+      =================================================================
+
+      Sorry for this excuse for documentation, but after I spent 1 day
+      writing the library itself and 1 week writing the demonstration
+      program, I don't want to spend another month writing the docs :)
+
+      Most of the library's features must be clear from the demonstration
+      program's source, so here are just a few additional notes:
+
+      ----------
+      The library reads fonts created with my very own GNOOM II sprite
+      editor. While I see no reason why you should use another program
+      for drawing fonts, here is the structure of the file created
+      by GNOOM II:
+
+      byte 1: Number of characters in the font
+	      NOTE: To have a file containing more than 24 characters,
+	      you need to use the GNJOIN utility introduced in GNOOM II
+	      version 1.02 (June 1995)
+      byte 2: Character width in pixels
+      byte 3: Character height in pixels
+      other:  Each character in raw format (1 byte per pixel, rows
+	      from top to bottom, columns from left to right)
+
+      The latest version of GNOOM II is available from x2ftp.oulu.fi.
+      Look for the file called GN2Vxxx.ZIP where xxx is the version
+      number.
+
+      ----------
+      To load a font, just declare an object to be of class ColorFont.
+      You can open as many fonts as you want (or until your PC runs out
+      of memory).
+
+      ----------
+      The following are the public variables and member functions of
+      the ColorFont class:
+
+      int Font_NumOfChars;	// number of characters in the font.
+				// set automatically - don't change it!
+
+      int Font_CharWidth;	// dimensions of the font in pixels -
+      int Font_CharHeight;	// don't change them either!
+
+      int Horiz_Spacing;	// horizontal and vertical spacing in pixels
+      int Vert_Spacing;		// use SetSpacing() function to change
+
+      ColorFont (char *);	// constructor
+      ~ColorFont ();		// destructor
+
+      void SetVideoAddress(unsigned char far *address);
+      void SetVideoAddress();
+      // used to set the starting address of the memory buffer (top left
+      // corner of the virtual page). Calling the function without 
+      // arguments sets the default - VGA screen address: A000:0000	
+
+      void SetVScreenDim(unsigned int width, unsigned int height);
+      // sets dimensions of the virtual screen. Might be useful if you
+      // have scrolling. By default, equal to 320 and 200 (VGA screen size)
+
+      void SetClipArea(unsigned int left, unsigned int right, 
+		       unsigned int top, unsigned int bottom);
+      void SetClipArea();
+      // used to define the clipping area. By default (which can be restored
+      // by calling the function without arguments), equal to virtual page
+      // dimensions minus one (e.g. 0, 319, 0, 199)
+
+      void SetSpacing(int horiz, int vert);
+      void SetSpacing(int horiz);
+      void SetSpacing();
+      // used to set horizontal and vertical character spacing. 
+      // SetSpacing() restores a nice-looking default.
+      // NOTE: Vertical spacing shows itself only when you use the new-line
+      // character (\n) inside your strings.
+
+      void SetTranslation(char *translation_string);
+      // defines a translation table. Characters in the font file are
+      // addressed by a number: 0 for the first character, 1 for the
+      // second, etc. Calling the command:
+      // FontName.SetTranslation("AB.");
+      // would tell the library that is should print the character #0 when
+      // asked to print 'A', the character #1 when asked to print 'B', and
+      // the character #2 when asked to print '.'
+
+      void SetSameChar(char c1, char c2);
+      // tells the library that the character c1 looks exactly like c2.
+      // The most common use is SetSameChar('0','O');
+
+      void ChangeColor(unsigned char from_index, unsigned char to_index);
+      // Changes one of the colors used in the font. This function
+      // simply replaces all the pixels of the color "from_index" with
+      // pixels of the color "to_index". This procedure is quite slow, 
+      // but what else could I do? To find out what color you used when
+      // drawing the fonts, you'll have to look into the font files
+      // themselves.
+
+      void Repaint(int n, ...);
+      // Replaces n colors used in the font by calling the ChangeColor
+      // function n times. This saves some space in the program, but
+      // does not provide any speed advantage. Warning: beware of chain
+      // changes! The command Repaint(3,1,2,2,3,3,4) will replace all the
+      // pixels of colors 1, 2 or 3 with pixels of color 4; it will *not*
+      // change 3 to 4, 2 to 3, and 1 to 2.
+
+      void PutCh(int x, int y, char c);
+      void BPutCh(int x, int y, char c);
+      void CPutCh(int x, int y, char c);
+      void CBPutCh(int x, int y, char c);
+      // all these functions print a character #c at coordinates (x,y).
+      // Note: c is the number of the character in the font file, not the
+      // ASCII code or anything else.
+      // BPutCh is the fastest of all; it prints the character including
+      // the pixels of color 0 and does not care about clipping.
+      // CBPutCh does the same with clipping.
+      // PutCh and CPutCh are analogous, but do not display pixels of color
+      // 0, so the letters look "transparent". These two functions are
+      // slower, too.
+
+      void Print(int x, int y, char *s);
+      void BPrint(int x, int y, char *s);
+      void CPrint(int x, int y, char *s);
+      void CBPrint(int x, int y, char *s);
+      // these functions print a string s at coordinates (x,y). Otherwise,
+      // they are similar to ...PutCh functions. The string may contain
+      // the new line character (\n).
+
+      ----------
+      You may ask why on earth did I decide to write this library. The story
+      behind is the following: I needed to create a font for the game I was
+      working on (it's 70% percent complete, and I still hope to finish it).
+      So, I spent a couple of hours painting one just to find out that it 
+      was too big. Discrarding that font would have been stupid, though, 
+      so I wrote a quick and dirty library to support it. Here it is, 
+      together with the font (BIGFONT.FNT; 3DFONT.FNT is a smaller font
+      that I did later and will use in the game). The library is not very
+      fast and is probably more bugged than a room full of bugs, but it's
+      small, working, and free of charge.
+
+      ----------
+      Send your comments, suggestions, bug reports, etc. to:
+
+      Nikolai Soumarokov
+      Zschokkegasse 91/5/25
+      1220 Vienna, Austria
+
+      phone/fax: (431) 283-7744

@@ -1,0 +1,36 @@
+
+
+                D O C U M E N T A T I O N
+
+
+
+        Finder.exe      Emulation fonctionnelle du Finder du Mac
+        MacFnt.fon      Polices de caractères pour le Finder
+
+
+        Je vous propose ce petit programme Windows II que je me
+        suis régalé à faire. Il prouve, à tous ceux qui pouvaient
+        encore en douter, que Windows est un environnement tout
+        à fait capable d'en faire autant que le Mac.
+
+        Ce programme est un premier jet. Il m'a couté quelques
+        nuits de boulot. Mais je me suis bien éclaté...
+
+        Vous êtes tous invités à le distribuer de manière aussi
+        large possible et ce gratuitement (évidement).
+
+        De nouvelles versions de plus en plus performantes et de
+        plus en plus sophistiquées veront le jour dans un avenir
+        que j'espère proche...
+
+        Je vous prierai de laisser toutes vos suggestions au sysop
+        de SUPTEL Pro (BBS 1200,8,N,1 au 48991200) qui me fera
+        suivre le courrier.
+
+        Il est encore évident que je tienne pour le moment à rester
+        anonyme pour des raisons que vous comprendrez...
+ 
+                                  Amitiés à tous Macky Hacky
+
+        PS: Il y a encore des bugs fonctionnels, mais ça va être
+            corrigé bientôt.
